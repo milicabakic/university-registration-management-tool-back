@@ -1,5 +1,6 @@
 package com.model;
 
+import com.model.value_object.Index;
 import com.model.value_object.Profile;
 import lombok.Data;
 
@@ -11,13 +12,16 @@ import java.util.List;
 public class Student {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String middleName;
     private String surname;
     private String JMBG;
+
+    @Embedded
+    private Index index;
 
     @Embedded
     private Profile profile;

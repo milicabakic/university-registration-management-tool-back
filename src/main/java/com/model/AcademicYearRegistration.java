@@ -1,5 +1,6 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,20 +11,27 @@ import java.util.List;
 public class AcademicYearRegistration {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Boolean renewed;
-    private int year;
+    private int academicYear;
 
+    @JsonIgnore
+    @ManyToOne
+    private AcademicProgram currAcademicProgram;
+
+    @JsonIgnore
     @ManyToOne
     private GroupOfSubjects groupOfSubjectsOdd;
 
+    @JsonIgnore
     @ManyToOne
     private GroupOfSubjects groupOfSubjectsEven;
 
-    @OneToMany
-    private List<Student> students;
+    @JsonIgnore
+    @ManyToOne
+    private Student student;
 
     @ManyToMany
     private List<Subject> subjects;

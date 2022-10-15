@@ -1,22 +1,25 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
 public class Subject {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String code;
-    private String ESPB;
+    private int espb;
     private String semester;
+    private int academicYear;
 
+    @JsonIgnore
+    @ManyToOne
+    private AcademicProgram academicProgram;
 }
