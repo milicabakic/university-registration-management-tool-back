@@ -1,5 +1,6 @@
 package com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class GroupOfSubjects {
     private String name;
     private int semester;
 
+    @JsonIgnore
     @ManyToOne
     private AcademicProgram academicProgram;
 

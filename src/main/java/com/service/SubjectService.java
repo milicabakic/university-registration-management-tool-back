@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubjectService {
 
@@ -47,5 +49,10 @@ public class SubjectService {
         return subject;
     }
 
+    public List<Subject> findSubjectsByAcademicYearLess(int academicYear, boolean equals) {
+        if(equals)
+            return subjectRepository.findByAcademicYearLessThanEqual(academicYear);
 
+        return subjectRepository.findByAcademicYearLessThan(academicYear);
+    }
 }

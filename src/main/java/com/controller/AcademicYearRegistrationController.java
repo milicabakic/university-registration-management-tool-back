@@ -1,7 +1,6 @@
 package com.controller;
 
-import com.model.Student;
-import com.request.AcademicYearForm;
+import com.request.NewAcademicYearForm;
 import com.request.StudentInfoForm;
 import com.service.AcademicYearRegistrationService;
 import com.service.StudentService;
@@ -29,13 +28,19 @@ public class AcademicYearRegistrationController {
         this.validatorService = validatorService;
     }
 
-    @PostMapping(path = "/student-form", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> submitStudentInfoForm(@RequestBody StudentInfoForm studentInfoForm) {
-        if(!validatorService.checkStudentInfoForm(studentInfoForm)) {
+    @PostMapping(path = "/student", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> submitStudentInfoForm(@RequestBody StudentInfoForm form) {
+        if(!validatorService.checkStudentInfoForm(form)) {
             return new ResponseEntity<>(MessageUtil.INVALID_FORM, HttpStatus.BAD_REQUEST);
         }
 
-        return academicYearRegistrationService.submitAcademicYearRegistration(studentInfoForm);
+        return academicYearRegistrationService.submitStudentRegistration(form);
+    }
+
+    @PostMapping(path = "/academic-year", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> submitNewAcademicYearForm(@RequestBody NewAcademicYearForm form) {
+
+        return academicYearRegistrationService.submitAcademicYearRegistration(form);
     }
 
 }
