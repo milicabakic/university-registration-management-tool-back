@@ -20,6 +20,9 @@ public class GroupOfSubjectsService {
         this.groupOfSubjectsRepository = groupOfSubjectsRepository;
     }
 
+    public GroupOfSubjects findById(Long id) {
+        return groupOfSubjectsRepository.findById(id).get();
+    }
 
     public List<GroupOfSubjects> findGroupsByAcademicYear(int academicYear, String academicProgramCode) {
         List<Integer> semesters = calculateSemestersByAcademicYear(academicYear);

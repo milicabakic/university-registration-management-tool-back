@@ -4,6 +4,7 @@ import com.mapper.ObjectMapper;
 import com.model.*;
 import com.repository.AcademicYearRegistrationRepository;
 import com.request.NewAcademicYearForm;
+import com.request.StudentChoiceForm;
 import com.request.StudentInfoForm;
 import com.response.NewAcademicYearResponse;
 import com.utils.MessageUtil;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AcademicYearRegistrationService {
@@ -65,8 +67,22 @@ public class AcademicYearRegistrationService {
     }
 
 
+    public boolean updateAcademicYearRegistration(Long id, List<Subject> subjects,
+                                                  GroupOfSubjects groupOdd, GroupOfSubjects groupEven) {
+        Optional<AcademicYearRegistration> registration = academicYearRegistrationRepository.findById(id);
+        if(registration.isPresent()) {
+            return false;
+        }
+        registration.get().setSubjects(subjects);
+        registration.get().setGroupOfSubjectsOdd(groupOdd);
+        registration.get().setGroupOfSubjectsEven(groupEven);
+        academicYearRegistrationRepository.save(registration.get());
+        return true;
+    }
+
+
     public ResponseEntity<?> submitAcademicYearRegistration(NewAcademicYearForm form) {
-        List<Subject> subjects = new ArrayList<>();
+        List<Subject> subjects;
         if(form.isRenewed()) {
             subjects = subjectService.findSubjectsByAcademicYearLess(form.getAcademicYear(), true);
         }
@@ -83,6 +99,18 @@ public class AcademicYearRegistrationService {
                 objectMapper.convertGroupOfSubjectsListToDto(groups));
 
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+
+    public ResponseEntity<?> saveStudentChoice(StudentChoiceForm form) {
+        List<Subject> subjects = subjectService.findAllById(form.getOldSubjects());
+        GroupOfSubjects groupOdd = groupOfSubjectsService.findById(form.getGroupOddId());
+        GroupOfSubjects groupEven = groupOfSubjectsService.findById(form.getGroupEvenId());
+
+        if(!updateAcademicYearRegistration(form.getRegistrationId(), subjects, groupOdd, groupEven)) {
+            return new ResponseEntity<>(MessageUtil.REGISTRATION_REJECTED, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(MessageUtil.REGISTRATION_ACCEPTED, HttpStatus.ACCEPTED);
     }
 
 }

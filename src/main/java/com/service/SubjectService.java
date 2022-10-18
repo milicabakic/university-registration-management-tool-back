@@ -55,4 +55,9 @@ public class SubjectService {
 
         return subjectRepository.findByAcademicYearLessThan(academicYear);
     }
+
+
+    public List<Subject> findAllById(List<Long> ids) {
+        return subjectRepository.findAllById(ids);
+    }
 }
