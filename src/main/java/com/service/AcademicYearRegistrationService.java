@@ -75,7 +75,7 @@ public class AcademicYearRegistrationService {
         }
 
         List<GroupOfSubjects> groups = new ArrayList<>();
-        if(form.getAcademicYear() >= 3) {
+        if(!form.isRenewed() && form.getAcademicYear() >= 3) {
             groups = groupOfSubjectsService.findGroupsByAcademicYear(form.getAcademicYear(), form.getAcademicProgramCode());
         }
 
