@@ -3,9 +3,9 @@ package com.dto;
 import lombok.Data;
 
 @Data
-public class SubjectDto {
+public class AcademicProgramDto {
 
     private Long id;
     private String name;
-    private int academicYear;
+    private String code;
 }

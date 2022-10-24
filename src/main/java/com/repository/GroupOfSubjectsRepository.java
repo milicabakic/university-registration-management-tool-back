@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface GroupOfSubjectsRepository extends JpaRepository<GroupOfSubjects, Long> {
 
-    @Query("SELECT g FROM GroupOfSubjects g INNER JOIN FETCH g.subjects WHERE (g.semester = :semester1 OR g.semester = :semester2) " +
+    @Query("SELECT DISTINCT g FROM GroupOfSubjects g LEFT JOIN FETCH g.subjects WHERE (g.semester = :semester1 OR g.semester = :semester2) " +
             "AND g.academicProgram.code LIKE :academicProgramCode")
     List<GroupOfSubjects> findBySemesterAndAcademicProgramCode(int semester1, int semester2, String academicProgramCode);
 

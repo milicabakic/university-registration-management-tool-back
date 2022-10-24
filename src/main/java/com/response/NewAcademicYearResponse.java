@@ -11,7 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 public class NewAcademicYearResponse {
 
-    private List<SubjectDto> subjects;
-    private List<GroupOfSubjectsDto> groupOfSubjects;
+    private List<GroupOfSubjectsDto> groupsOdd;
+    private List<GroupOfSubjectsDto> groupsEven;
+    private List<SubjectDto> subjectsOdd;
+    private List<SubjectDto> subjectsEven;
 
 }
