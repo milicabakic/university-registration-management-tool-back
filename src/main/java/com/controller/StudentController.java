@@ -22,11 +22,11 @@ public class StudentController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        if(studentService.isUsernameInInvalidFormat(loginRequest.getUsername())) {
-            return ResponseEntity.status(403).build();
+        if(!studentService.isUsernameInValidFormat(loginRequest.getUsername())) {
+            return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.ok().build();
+        return studentService.login(loginRequest.getUsername());
     }
 
 }

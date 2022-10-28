@@ -33,7 +33,7 @@ public class AcademicYearRegistrationController {
 
     @PostMapping(path = "/student", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> submitStudentInfoForm(@RequestBody StudentInfoForm form) {
-        if(!validatorService.checkStudentInfoForm(form)) {
+        if (!validatorService.checkStudentInfoForm(form)) {
             return new ResponseEntity<>(MessageUtil.INVALID_FORM, HttpStatus.BAD_REQUEST);
         }
 
@@ -42,7 +42,6 @@ public class AcademicYearRegistrationController {
 
     @PostMapping(path = "/academic-year", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> submitNewAcademicYearForm(@RequestBody NewAcademicYearForm form) {
-
         return academicYearRegistrationService.submitAcademicYearRegistration(form);
     }
 

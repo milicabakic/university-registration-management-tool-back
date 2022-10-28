@@ -13,6 +13,9 @@ import java.util.List;
 public class GroupOfSubjectsService {
 
     private GroupOfSubjectsRepository groupOfSubjectsRepository;
+    private final int SEMESTERS_PER_YEAR = 2;
+    private final int REQUIRED_ACADEMIC_YEAR = 3;
+    private final int FINAL_ACADEMIC_YEAR = 4;
 
 
     @Autowired
@@ -24,12 +27,21 @@ public class GroupOfSubjectsService {
         return groupOfSubjectsRepository.findById(id).get();
     }
 
-    public List<GroupOfSubjects> findGroupsByAcademicYear(int academicYear, String academicProgramCode) {
-        List<Integer> semesters = calculateSemestersByAcademicYear(academicYear);
-        if(semesters.size() != 2) {
-            System.out.println("Greska u racunanju semestara");
-            return null;
+    public List<GroupOfSubjects> findByAcademicYearAndRenewedFlag(int academicYear, String academicProgramCode, boolean renewed) {
+        if (renewed && academicYear < REQUIRED_ACADEMIC_YEAR) {
+            return new ArrayList<>();
         }
+
+        return findByAcademicYear(academicYear, academicProgramCode);
+    }
+
+    public List<GroupOfSubjects> findByAcademicYear(int academicYear, String academicProgramCode) {
+        List<Integer> semesters = calculateSemestersByAcademicYear(academicYear);
+        if(semesters.size() != SEMESTERS_PER_YEAR) {
+            return new ArrayList<>();
+        }
+
+        System.out.println("GODINA " + academicYear + ", SEMESTRI " + semesters);
         return groupOfSubjectsRepository.findBySemesterAndAcademicProgramCode(semesters.get(0), semesters.get(1), academicProgramCode);
     }
 
@@ -38,21 +50,11 @@ public class GroupOfSubjectsService {
      */
     private List<Integer> calculateSemestersByAcademicYear(int academicYear) {
         List<Integer> semesters = new ArrayList<>();
-        switch (academicYear) {
-            case 1:
-                Collections.addAll(semesters, 1, 2);
-                break;
-            case 2:
-                Collections.addAll(semesters, 3, 4);
-                break;
-            case 3:
-                Collections.addAll(semesters, 5, 6);
-                break;
-            case 4:
-                Collections.addAll(semesters, 7, 8);
-                break;
+        if (academicYear > FINAL_ACADEMIC_YEAR) {
+            return semesters;
         }
 
+        Collections.addAll(semesters, academicYear * SEMESTERS_PER_YEAR - 1, academicYear * SEMESTERS_PER_YEAR);
         return semesters;
     }
 

@@ -29,9 +29,9 @@ public class SubjectService {
         AcademicProgram academicProgram = academicProgramService.findByAcademicProgramCode(subjectForm.getAcademicProgramCode());
 
         if(academicProgram == null)
-            return new ResponseEntity<>(MessageUtil.INVALID_FORM, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(MessageUtil.INVALID_FORM, HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(saveSubject(subjectForm, academicProgram), HttpStatus.ACCEPTED);
+        return new ResponseEntity(saveSubject(subjectForm, academicProgram), HttpStatus.ACCEPTED);
     }
 
     public Subject saveSubject(SubjectForm subjectForm, AcademicProgram academicProgram) {
@@ -50,8 +50,9 @@ public class SubjectService {
     }
 
     public List<Subject> findSubjectsByAcademicYearLess(int academicYear, boolean equals) {
-        if(equals)
+        if (equals) {
             return subjectRepository.findByAcademicYearLessThanEqual(academicYear);
+        }
 
         return subjectRepository.findByAcademicYearLessThan(academicYear);
     }

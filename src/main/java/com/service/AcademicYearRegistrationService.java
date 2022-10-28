@@ -1,6 +1,5 @@
 package com.service;
 
-import com.dto.AcademicYearRegistrationDto;
 import com.mapper.ObjectMapper;
 import com.model.*;
 import com.repository.AcademicYearRegistrationRepository;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +44,14 @@ public class AcademicYearRegistrationService {
         boolean renewedYear = form.isRenewedYear();
         AcademicProgram academicProgram = academicProgramService.findByAcademicProgramCode(form.getChosenAcademicProgramCode());
 
-        if(student == null || academicProgram == null)
-            return new ResponseEntity<>(MessageUtil.WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);
+        if (student == null || academicProgram == null) {
+            return new ResponseEntity(MessageUtil.WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);
+        }
 
-        AcademicYearRegistration registration = saveAcademicYearRegistration(student, renewedYear, academicProgram, form.getNextAcademicYear());
+        AcademicYearRegistration registration = saveAcademicYearRegistration(student, renewedYear, academicProgram,
+                form.getNextAcademicYear());
 
-        return new ResponseEntity<>(objectMapper.convertAcademicYearRegistrationToDto(registration), HttpStatus.ACCEPTED);
+        return new ResponseEntity(objectMapper.convertAcademicYearRegistrationToDto(registration), HttpStatus.ACCEPTED);
     }
 
 
@@ -73,10 +73,10 @@ public class AcademicYearRegistrationService {
     public boolean updateAcademicYearRegistration(Long id, List<Subject> subjects,
                                                   GroupOfSubjects groupOdd, GroupOfSubjects groupEven) {
         Optional<AcademicYearRegistration> registration = academicYearRegistrationRepository.findById(id);
-        System.out.println(registration.get().toString());
-        if(registration == null) {
+        if (registration == null) {
             return false;
         }
+
         registration.get().setSubjects(subjects);
         registration.get().setGroupOfSubjectsOdd(groupOdd);
         registration.get().setGroupOfSubjectsEven(groupEven);
@@ -86,26 +86,20 @@ public class AcademicYearRegistrationService {
 
 
     public ResponseEntity<?> submitAcademicYearRegistration(NewAcademicYearForm form) {
-        List<Subject> subjects;
-        if(form.isRenewed()) {
-            subjects = subjectService.findSubjectsByAcademicYearLess(form.getAcademicYear(), true);
-        }
-        else {
-            subjects = subjectService.findSubjectsByAcademicYearLess(form.getAcademicYear(), false);
-        }
+        List<Subject> subjects = subjectService.findSubjectsByAcademicYearLess(form.getAcademicYear(), form.isRenewed());
 
-        List<GroupOfSubjects> groups = new ArrayList<>();
-        if(!form.isRenewed() && form.getAcademicYear() >= 3) {
-            groups = groupOfSubjectsService.findGroupsByAcademicYear(form.getAcademicYear(), form.getAcademicProgramCode());
-        }
+        List<GroupOfSubjects> groups = groupOfSubjectsService.findByAcademicYearAndRenewedFlag(form.getAcademicYear(),
+                form.getAcademicProgramCode(), form.isRenewed());
+//        if(!form.isRenewed() && form.getAcademicYear() >= 3) {
+//            groups = groupOfSubjectsService.findGroupsByAcademicYear(form.getAcademicYear(), form.getAcademicProgramCode());
+//        }
 
-        System.out.println(groups.size() + "----------------BROJ GRUPA");
 
         NewAcademicYearResponse response = new NewAcademicYearResponse(objectMapper.filterGroupsOddToDto(groups),
                 objectMapper.filterGroupsEvenToDto(groups), objectMapper.filterSubjectsOddToDto(subjects),
                 objectMapper.filterSubjectsEvenToDto(subjects));
 
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        return new ResponseEntity(response, HttpStatus.ACCEPTED);
     }
 
 
@@ -114,10 +108,10 @@ public class AcademicYearRegistrationService {
         GroupOfSubjects groupOdd = groupOfSubjectsService.findById(form.getGroupOddId());
         GroupOfSubjects groupEven = groupOfSubjectsService.findById(form.getGroupEvenId());
 
-        if(!updateAcademicYearRegistration(form.getRegistrationId(), subjects, groupOdd, groupEven)) {
-            return new ResponseEntity<>(MessageUtil.REGISTRATION_REJECTED, HttpStatus.BAD_REQUEST);
+        if (!updateAcademicYearRegistration(form.getRegistrationId(), subjects, groupOdd, groupEven)) {
+            return new ResponseEntity(MessageUtil.REGISTRATION_REJECTED, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new StudentChoiceResponse(MessageUtil.REGISTRATION_ACCEPTED), HttpStatus.ACCEPTED);
+        return new ResponseEntity(new StudentChoiceResponse(MessageUtil.REGISTRATION_ACCEPTED), HttpStatus.ACCEPTED);
     }
 
 

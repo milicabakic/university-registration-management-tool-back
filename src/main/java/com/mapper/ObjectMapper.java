@@ -1,13 +1,7 @@
 package com.mapper;
 
-import com.dto.AcademicProgramDto;
-import com.dto.AcademicYearRegistrationDto;
-import com.dto.GroupOfSubjectsDto;
-import com.dto.SubjectDto;
-import com.model.AcademicProgram;
-import com.model.AcademicYearRegistration;
-import com.model.GroupOfSubjects;
-import com.model.Subject;
+import com.dto.*;
+import com.model.*;
 import com.utils.SemesterValue;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +91,11 @@ public class ObjectMapper {
         return academicPrograms.stream()
                 .map(this::convertAcademicProgramToDto)
                 .collect(Collectors.toList());
+    }
+
+    public StudentDto convertStudentToDto(Student student) {
+        StudentDto studentDto = modelMapper.map(student, StudentDto.class);
+        return studentDto;
     }
 
 }
