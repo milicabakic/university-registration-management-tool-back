@@ -8,15 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/student")
+@RequestMapping("/api/auth")
 @CrossOrigin
-public class StudentController {
+public class AuthenticationController {
 
     private StudentService studentService;
 
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public AuthenticationController(StudentService studentService) {
         this.studentService = studentService;
     }
 

@@ -59,6 +59,9 @@ public class SubjectService {
 
 
     public List<Subject> findAllById(List<Long> ids) {
+        if (ids.isEmpty()) {
+            return null;
+        }
         return subjectRepository.findAllById(ids);
     }
 }

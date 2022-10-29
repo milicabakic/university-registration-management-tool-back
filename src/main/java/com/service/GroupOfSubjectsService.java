@@ -24,7 +24,10 @@ public class GroupOfSubjectsService {
     }
 
     public GroupOfSubjects findById(Long id) {
-        return groupOfSubjectsRepository.findById(id).get();
+        if (id != null) {
+            return groupOfSubjectsRepository.findById(id).get();
+        }
+        return null;
     }
 
     public List<GroupOfSubjects> findByAcademicYearAndRenewedFlag(int academicYear, String academicProgramCode, boolean renewed) {
